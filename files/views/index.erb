@@ -1,0 +1,322 @@
+  <div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"></h3>
+
+    <table width="100%">
+      <tbody>
+<div class="test" id="test">
+</div>
+          </tbody>
+        </table>
+
+      </div>
+
+    </div>
+
+<% if servers == nil %>
+  Something went terribly wrong.
+<% elsif servers.has_key? 'error' %>
+  <p style="color:white"><%= servers %></p>
+<% else %>
+  <% servers["data"].each do |server| %>
+    <div class='panel panel-default' id="Server_<%= server["sid"] %>"> 
+  <div class='panel-heading'>
+    <h3 class='panel-title'></h3>
+
+    <table width='100%'>
+      <tr>
+        <td id='PanelTitle_<%= server['sid'] %>' width='300'><i class='fa fa-cloud-upload'></i>&nbsp;&nbsp;
+          <%
+          if server['label'] 
+            name = server['label'] 
+          elsif server['servername']
+            name = server['servername']
+          end %>
+        <%= name %>
+      </td>
+        <td align='right'>
+          <button id='Info_254520033' class='btn btn-group-sm btn-info' href='#' data-content="
+                  <table cellpadding='1' cellspacing='2' width='100%' class='RegTable'><tr><td width='120' align='right'>
+                        Server ID:     </td><td><%= server['id'] %></td></tr><tr><td width='120' align='right'>
+                        Installed:     </td><td><%= server['sdate'] %></td></tr><tr><td width='120' align='right'>
+                        IP Address:     </td><td><%= server['ip'] %></td></tr><tr><td width='120' align='right'>
+                        Netmask:</td><td><%= server['netmask'] %></td></tr><tr><td width='120' align='right'>
+                        Gateway:</td><td><%= server['gateway'] %></td></tr><tr><td width='120' align='right'>
+                        Password:</td><td><%= server['rootpass'] %></td></tr><tr><td width='120' align='right'>
+                        Server Type:</td><td><%= server['servertype'] %></td></tr><tr><td width='120' align='right'>
+                        Template:</td><td><%= server['template'] %></td></tr><tr><td width='120' align='right'>
+                        Run Mode:</td><td><%= server['mode'] %></td></tr></table>" 
+              rel='popover' data-placement='left' data-original-title="<font color='#000'><i class='fa fa-default-circle'></i>&nbsp;&nbsp;Advanced Server Information</font>" data-toggle='popover' data-html='true'><i class='fa fa-info-circle'></i></button>
+          <div class='btn-group btn-group-sm closed' style="text-align: left">
+
+
+            <a class='btn btn-default' href='javascript:void(0)' id='Power_<%= server['sid'] %>'>
+              <i class='fa fa-power-off' id='PowerIco_<%= server['sid'] %>'></i>&nbsp;&nbsp;Power</a>
+            <a class='btn btn-default dropdown-toggle' data-toggle='dropdown' href='#' id='PowerDrp_<%= server['sid'] %>'><span class='fa fa-caret-down'></span>
+            </a>
+
+            <ul class='dropdown-menu'>
+              <li><a href='javascript:void(0)' onclick='power("reset", <%= server['sid'] %>)'><i class='fa fa-refresh fa-fw'></i>&nbsp;&nbsp;Reboot</a></li>
+              <li><a href='javascript:void(0)' onclick='power("poweron", <%= server['sid'] %>)'><i class='fa fa-play fa-fw'></i>&nbsp;&nbsp;Power On</a></li>
+              <li><a href='javascript:void(0)' onclick='power("poweroff", <%= server['sid'] %>)'><i class='fa fa-stop fa-fw'></i>&nbsp;&nbsp;Power Off</a></li>
+            </ul>
+          </div>&nbsp;
+
+          <div class='btn-group btn-group-sm closed' style="text-align: left">
+            <a class='btn btn-default' href='#' id='Modify_<%= server['sid'] %>'><i class='fa fa-puzzle-piece fa-fw' id='ModifyIco_<%= server['sid'] %>'></i>&nbsp;&nbsp;Modify</a><a class='btn btn-default dropdown-toggle' data-toggle='dropdown' href='#' id='ModifyDrp_<%= server['sid'] %>'><span class='fa fa-caret-down'></span></a>
+
+            <ul class='dropdown-menu'>
+              <li class=''>
+              <a href='#' onclick='set_rdns("<%= server['sid'] %>", "<%= server['rdns'] %>")'><i class='fa fa-exchange fa-fw'></i>&nbsp;&nbsp;Reverse DNS</a>
+              </li>
+
+              <li>
+              <a href='#' onclick='set_label(<%= server['sid'] %>, "<%= server['label'] %>")'><i class='fa fa-edit fa-fw'></i>&nbsp;&nbsp;Rename Label</a>
+              </li>
+
+              <li>
+              <a href='#' onclick='set_runmode(<%= server['sid'] %>, "<%= server['label'] %>")'><i class='fa fa-edit fa-fw'></i>&nbsp;&nbsp;Change Run Mode</a>
+              </li>
+              
+            <% if server['servertype'] == "cloudpro" %>
+              <li>
+              <a href='#' onclick='set_server(<%= server['sid'] %>)'><i class='fa fa-edit fa-fw'></i>&nbsp;&nbsp;Delete Server</a>
+              </li>
+            <% end %>
+
+
+            </ul>
+          </div>&nbsp;
+
+          <div class='btn-group btn-group-sm closed' style="text-align: left">
+            <a class='btn btn-sm btn-default' href='cac/console?sid=<%= server['sid'] %>' target="_blank"><i class='fa fa-desktop'></i>&nbsp;&nbsp;Console</a>
+          </div>&nbsp;
+
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class='panel-collapse in' id='Body_<%= server['sid'] %>'>
+    <div class='panel-body'>
+      <table cellpadding='1' cellspacing='2' width='100%'>
+        <tr>
+          <td id='ServerLeft_<%= server['sid'] %>' valign='top' width='50%'>
+            <table cellpadding='1' cellspacing='2' width='100%'>
+              <tr>
+                <td align='right' width='120'>Current OS:</td>
+                <td><%= server['template'] %>
+              </td>
+              </tr>
+
+              <tr>
+                <td align='right' width='120'>IP Address:</td>
+                <td><%= server['ip'] %></td>
+              </tr>
+              <tr>
+                <td align='right' width='120'>Reverse DNS:</td>
+                <td>
+                  <div class='btn-group btn-group-xs closed' style="text-align: left">
+                    <a class='btn btn-xs btn-default' href="http://<%= server['rdns'] %>" target='_blank'><%= server['rdns'] %></a>
+                  </div>&nbsp;&nbsp;<i class='fa fa-globe'></i>
+                </td>
+              </tr>
+            </table>
+          </td>
+
+          <td width='50%'>
+            <table cellpadding='1' cellspacing='2' width='100%'>
+              <tr>
+                <td align='right' width='120'>CPU:</td>
+
+                <td>
+                  <div class='progress'>
+                    <% cpu_usage = server['cpuusage'].to_i / server['cpu'].to_i %>
+                    <div class='progress-bar <% if (cpu_usage > 90)%>progress-bar-danger<% elsif (cpu_usage > 50)%>progress-bar-warning<% else %>progress-bar-success<% end %>' style='width: <%= cpu_usage %>%;'>
+                      <span class='sr-only'><%= cpu_usage %>%</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td align='right' width='120'>512MB RAM:</td>
+
+                <td>
+                  <div class='progress'>
+                    <% ram_usage = ((server['ramusage'].to_f / server['ram'].to_f) * 100).round(0) %>
+                    <div class='progress-bar <% if (ram_usage > 90)%>progress-bar-danger<% elsif (ram_usage > 50)%>progress-bar-warning<% else %>progress-bar-success<% end %>' style='width: <%= ram_usage %>%;'>
+                      <span class='sr-only'><%= ram_usage %>%</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td align='right' width='120'>11GB SSD:</td>
+
+                <td>
+                  <div class='progress'>
+                    <% hd_usage = ((server['hdusage'].to_f / server['storage'].to_f) * 100).round(0) %>
+                    <div class='progress-bar <% if (hd_usage > 90)%>progress-bar-danger<% elsif (hd_usage > 50)%>progress-bar-warning<% else %>progress-bar-success<% end %>' style='width: <%= hd_usage %>%;'>
+                      <span class='sr-only'><%= hd_usage %>%</span>
+                    </div>
+                </div> </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<% end %>
+<% end %>
+<script>
+function next() {
+  $.ajax({
+async: true,
+url: 'cac/tasks',
+success: function(r) {
+console.log(r); //this works
+$('#test').html(r); //this happens all at once
+
+}
+});
+}
+next();
+$(function() {
+    setInterval(next, 2000);
+    });
+</script>
+<script>
+function cac_build() {
+  var storage = $(".storage").val();
+  var cpu = $(".cpu").val();
+  var ram = $(".ram").val();
+  var os = $(".os").val();
+	$('#queModal').modal('hide');
+  $.ajax({
+    async: true,
+    type: "POST",
+    data: "storage=" + storage + "&cpu=" + cpu + "&ram=" + ram + "&os=" + os,
+    url: "cac/build",
+    cache: false,
+    success: function (data) {
+      window.location.reload();
+    }
+    });
+}
+
+function set_server(sid){
+  var title = '<i class="fa fa-exchange fa-2x"></i>&nbsp;&nbsp;<font size="4">Delete server</font>';
+  var body = '<p>ALL data will be deleted.</p>';
+  var button ="<button type='button' class='btn btn-success' id='editnameBTN' onClick='delete_server("+sid+")'>Delete</button>&nbsp;<button type='button' class='btn btn-default' data-dismiss='modal'>Cancel</button>";
+  load_modal(title, body, button);
+}
+
+function delete_server(sid) {
+  $.ajax({
+  async: true,
+  type: "POST",
+  data: "sid=" + sid,
+  url: "cac/delete",
+  cache: false,
+  success: function () {
+    $( "#Server_" + sid).hide();
+    }
+});
+  $('#queModal').modal('hide');
+}
+
+function set_runmode(sid, name){
+	var title = '<i class="fa fa-edit fa-2x"></i>&nbsp;&nbsp;<font size="4">Change Server Run Mode</font>';
+	var body = '<table cellpadding="1" cellspacing="2" width="100%"><tbody><tr><td width="120" align="right"> </td><td> </td></tr><tr><td width="120" align="right">Select Mode:</td><td><select id="mode" class="mode" > <option value="safe" selected="true">Safe Mode - Shutdown after 7 Days</option><option value="normal">Normal - Leave Powered On</option></select></td></tr></tbody></table>';
+	var button ="<button type='button' class='btn btn-success'  onclick='runmode("+sid+");'>Continue</button>&nbsp;<button type='button' class='btn btn-default' data-dismiss='modal'>Cancel</button>";
+  load_modal(title, body, button);
+}
+
+function runmode(sid) {
+  var mode = $("#mode option:selected").val();
+  $.ajax({
+  async: true,
+  type: "POST",
+  data: "sid=" + sid + "&mode=" + mode,
+  url: "cac/runmode",
+  cache: false,
+  success: function(data) {
+  alert(data);
+  }
+});
+  $('#queModal').modal('hide');
+}
+
+function set_label(sid, name){
+  var title = '<i class="fa fa-exchange fa-2x"></i>&nbsp;&nbsp;<font size="4">Rename Label</font>';
+  var body = '<table cellpadding="1" cellspacing="2" width="100%"><tbody><tr><td width="120" align="right">Current label:</td><td>' + name + '</td></tr><tr><td width="120" align="right">Change To:</td><td><input class="form-control" type="text" placeholder="New label" id="label"></td></tr></tbody></table><br><br><br>';
+  var button ="<button type='button' class='btn btn-success' id='editnameBTN' onClick='rename_label("+sid+")'>Continue</button>&nbsp;<button type='button' class='btn btn-default' data-dismiss='modal'>Cancel</button>";
+  load_modal(title, body, button);
+}
+
+function rename_label(sid) {
+  var name = $("#label").val();
+  $.ajax({
+async: true,
+type: "POST",
+data: "sid=" + sid + "&name=" + name,
+url: "cac/rename",
+cache: false,
+success: success
+});
+$('#queModal').modal('hide');
+}
+
+function set_rdns(sid, name){
+  var title = '<i class="fa fa-exchange fa-2x"></i>&nbsp;&nbsp;<font size="4">Reverse DNS</font>';
+  var body = '<table cellpadding="1" cellspacing="2" width="100%"><tbody><tr><td width="120" align="right">Current entry:</td><td><a href="http://'+ name +'" target="_blank">' + name + '</a></td></tr><tr><td width="120" align="right">Change To:</td><td><input class="form-control" type="text" placeholder="New Domain Name" id="rdns_input"></td></tr></tbody></table><br><br><br>';
+  var button ="<button type='button' class='btn btn-success' id='editnameBTN' onClick='submit_rdns("+sid+")'>Continue</button>&nbsp;<button type='button' class='btn btn-default' data-dismiss='modal'>Cancel</button>";
+  load_modal(title, body, button);
+}
+
+function submit_rdns(sid) {
+  var hostname = $("#rdns_input").val();
+  $.ajax({
+async: true,
+type: "POST",
+data: "sid=" + sid + "&hostname=" + hostname,
+url: "cac/rdns",
+cache: false,
+success: success
+});
+$('#queModal').modal('hide');
+}
+
+function load_modal(T, B, Btn, ST, MDL){
+  ST ? document.getElementById("SubTitle").innerHTML = ST : "";
+  document.getElementById("modalTitle").innerHTML = T;
+  document.getElementById("modalBody").innerHTML = B;
+  document.getElementById("btns").innerHTML = Btn;
+  MDL ? $('#'+MDL).modal('show') : $('#queModal').modal('show');
+}
+
+function power(action, sid) {
+  x = confirm("Are you sure?");
+  if (x)
+    $.ajax({
+async: true,
+type: "POST",
+data: "action=" + action + "&sid=" + sid,
+url: "cac/powerop",
+cache: false,
+success: success
+});
+}
+
+function success() {
+  $('#test').html('<tr><td><i class="fa fa-spinner fa-spin"></i>&nbsp;Queuing action</td></tr>');
+}
+
+function error(r) {
+  $('#test').html('<tr><td><i class="fa fa-stop"></i>&nbsp; Error' + r + '</td></tr>');
+}
+</script>
