@@ -1,0 +1,37 @@
+<% if tasks == nil %>
+  Something went terribly wrong.
+    <% elsif tasks.has_key? 'error' %>
+  <p style="color:black"><%= tasks %></p>
+    <% else %>
+  <% tasks["data"][-3..-1].each do |task| %>
+  <% if task["status"] == "completed" %>
+  <% 
+      case task["action"]
+  when /reset/
+    action = "Rebooted"
+  when /poweron/
+    action = "Powered On"
+  when /poweroff/
+    action = "Powered Off"
+  end
+%>
+<tr><td><i class="fa fa-check"></i>&nbsp;&nbsp;<%= Time.at(task["finishtime"].to_i).strftime('%H:%M:%S') %> - CloudAtCost NOC Confirmed - <%= task["action"] %></td></tr>
+<% end %>
+<% end %>
+  <% tasks["data"].each do |task| %>
+    <% if task["status"] == "pending" %>
+    <% 
+        case task["action"]
+    when /reset/
+      action = "Rebooting"
+    when /poweron/
+      action = "Powering On"
+    when /poweroff/
+      action = "Powering Off"
+    end
+  %>
+  <tr><td><i class="fa fa-spinner fa-spin"></i>&nbsp;&nbsp;<%= Time.at(task["starttime"].to_i).strftime('%H:%M:%S') %> - CloudAtCost NOC Confirmed - <%= task["action"] %></td></tr>
+
+  <% end %>
+  <% end %>
+  <% end %>

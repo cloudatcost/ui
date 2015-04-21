@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang='en' class='wf-museoslab-n3-active wf-museoslab-n5-active wf-proximanova-n3-active wf-proximanova-n4-active wf-proximanova-n6-active wf-proximanovascosf-n3-active wf-active'>
+<head>
+<meta charset='utf-8'>
+
+<link rel="shortcut icon" type="image/x-icon" href="images/ico/cloud-icon.ico">
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel='stylesheet' href="css/assets.css">
+<link rel="stylesheet" href="css/bootstrap.submodal.css">
+
+<script type='text/javascript' src="js/jQuery.1.10.2.js"></script>
+<script type='text/javascript' src='js/bootstrap.min.js'></script>
+<script type='text/javascript' src='js/bootstrap.submodal.js'></script>
+<script type='text/javascript' src='js/siteFunctions.js'></script>
+
+</head>
+<body>
+<header class="wraper BackDrop"> </header>
+<header class="wraper head">
+  <section class="head-els">
+    <div class="logo">
+      <img src="images/cloud-logo-2.png">cloud<span style="color:#5fc5fe">at</span>cost
+    </div>
+  </section>
+</header><div align='center' class='header-menu'>
+  <!-- Right Hand Floater -->
+
+  <!-- Reseller's User Button -->
+
+  <!-- End Reseller's User Button -->
+  <!--<div class='btn-group btn-group-sm closed' align='left'><a href="#" class="btn btn-sm btn-default" onclick='MYINV();'><i class ="fa fa-list-ul"></i>&nbsp;&nbsp;My Inventory</a></div>-->
+  <div class="btn-group btn-group-sm closed" align="left"><a class="btn btn-sm btn-default" onclick='build()'><i class="fa fa-gamepad"></i>&nbsp;&nbsp;Build</a></div>&nbsp; 
+  <div class="btn-group btn-group-sm closed" align="left"><a href="https://github.com/cloudatcost/api" target="_blank" class="btn btn-sm btn-default" onclick=''><i class="fa fa-gamepad"></i>&nbsp;&nbsp;API</a></div>&nbsp; 
+  <!--
+  <div class="btn-group btn-group-sm closed" align="left"><a href="#" class="btn btn-sm btn-default" onclick='openSettings();'><i class="fa fa-cogs"></i>&nbsp;&nbsp;Settings</a></div>&nbsp;
+  <div class="btn-group btn-group-sm closed" align="left"><a href="logout.php" class="btn btn-sm btn-default"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;Logout</a></div>
+  -->
+  </div>
+<div class='main-holder' align='center'>
+
+  <%= yield %>
+
+</div>
+
+<!-- Modal -->
+<div class='modal fade' id='queModal' tabindex='-1' role='dialog' aria-labelledby='queModalLabel' aria-hidden='true'>
+  <div class='modal-header'>
+    <h3 class='modal-title' id='modalTitle'>Title</h3>
+  </div>
+  <div class='modal-body'>
+    <!-- Sub-Modal -->
+    <div id="SubqueModal" class="modal sub-modal hide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-body">
+        <div class="control-group">
+          <table width="100%"><tr><td id="SUBmodal">Please enter your Password to continue: </td></tr>
+            <tr><td id="lowMod">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+                  <input class="form-control" type="password" id="inputPSSWD" placeholder="Password">
+                </div>
+            </td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-small" data-dismiss="submodal" aria-hidden="true">Cancel</button>
+        <button class="btn btn-small btn-danger" id="SUBmodalOKbtn">Continue</button>
+      </div>
+    </div><!-- /.Sub-Modal -->
+    <table width='100%'><tr><td id='modalBody'>Body</td></tr></table>
+  </div>
+  <div class='modal-footer' id='btns'>
+    <button type='button' class='btn btn-small btn-default' data-dismiss='modal'>No</button>
+    <button type='button' class='btn btn-small btn-default'>Yes</button>
+  </div>
+</div><!-- /.Modal -->
+
+
+
+</body>
+
+<script>
+// Add Server
+function build(CNM, cpurowfree, ramrowfree, storagerowfree){
+  if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp=new XMLHttpRequest();
+  }else{// code for IE6, IE5
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+
+  xmlhttp.onreadystatechange=function(){
+    if (xmlhttp.readyState==4){
+      var TIT = '<i class="fa fa-cloud fa-2x"></i>&nbsp;&nbsp;<font size="4">Cloud PRO</font>';
+      var BOD = xmlhttp.responseText;
+
+      var Btn="<button type='button' class='btn btn-default' id='bootdelayBTN' onclick='alertOK();'>Close</button>";
+      LoadModal(TIT, BOD, Btn);
+
+    }    
+  }
+
+  xmlhttp.open("GET","build");
+  xmlhttp.send();
+}
+</script>
+</html>

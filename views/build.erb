@@ -1,0 +1,58 @@
+<% if ((resources == nil) || (templates == nil))%>
+  <p> Error getting resources / templates </p>
+  <% elsif ((resources.has_key? 'error') || (templates.has_key? 'error')) %>
+  <p> Error getting resources / templates </p>
+<% else %>
+  <div id = "form">
+  <table name="firstname" wcellpadding='2' cellaspacing='2'>
+
+    <tr><td width='200' align='right'>Datacenter:</td><td>
+        <select name='datacenter'>
+          <option value='1'>Canada-Ontario-Kitchener-DC1</option>
+        </select>
+    </td></tr>
+
+    <tr><td width='200' align='right'>vCPU:</td><td>
+        <select class="cpu" name='cpu'>"
+          <% mb = 1024 %>
+          <% for i in 1..8%>
+            <option value='<%= i %>'><%= i %> vCPU</option>
+          <% end %>
+        </select>
+          (<%= resources["data"]["total"]["cpu_total"].to_i - resources["data"]["used"]["cpu_used"].to_i  %> vCPU Available)
+      </td></tr>
+
+      <tr><td width='200' align='right'>RAM:</td><td>
+          <select class="ram" name='ram'>"
+            <option value='512'>512 MB</option>
+            <% mb = 0 %>
+            <% for i in 1..34%>
+              <option value='<%= mb += 1024%>'><%= i %> GB</option>
+          <% end %>
+          </select>
+          (<%= resources["data"]["total"]["ram_total"].to_i - resources["data"]["used"]["ram_used"].to_i %>MB RAM Available)
+      </td>
+  </tr>
+
+      <tr><td width='200' align='right'>Storage:</td><td>
+          <select class="storage" name='storage'>"
+            <% hd = 0 %>
+            <% for i in 1..100%>
+              <option value='<%= hd += 10%>'><%= hd %> GB</option>
+          <% end %>
+          </select>
+          (<%= resources["data"]["total"]["storage_total"].to_i - resources["data"]["used"]["storage_used"].to_i %>GB Storage Available)
+      </td></tr>
+
+      <tr><td width='200' align='right'>OS Type:</td><td>
+          <select class="os" name='os'>
+            <% templates["data"].each do |t|%>
+              <option value='<%= t['id'] %>'><%= t['detail'] %></option>
+          <% end %>
+          </select>
+      </td></tr>
+    </table>
+    <p style="text-align:center"> Note: Windows will fail to deploy on anything less than 2GB of RAM.</p>
+    <div style="text-align:center; padding-top:1em; font-size:16px;"><button class='btn btn-small btn-default' onclick="cac_build()">DEPLOY</button></div>
+  </div>
+<% end %>
